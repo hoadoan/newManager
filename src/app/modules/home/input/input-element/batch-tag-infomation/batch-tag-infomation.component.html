@@ -1,0 +1,109 @@
+<div *ngIf="productName?.isManagedInBatches == true; else NoBatchProduct">
+  <div *ngIf="batchInfo.batchId != null ; else newBatch">
+    <span role="button" (click)="openModalEditBatch()" style="margin: 5px 10px 5px 5px;">
+      {{fullInfomationOfBatch?.batchBarcode}} - NSX: {{fullInfomationOfBatch?.manufacturingDate | date:'dd/MM/yyyy'}} -
+      HSD: {{fullInfomationOfBatch?.expiryDate | date:'dd/MM/yyyy'}}
+      - {{'SL: ' + batchInfo.quantity}} {{unit.unitName}} - Tổng: {{batchInfo.totalPrice | currency:'VND'}}</span>
+  </div>
+  <ng-template #newBatch>
+    <span role="button" (click)="openModalEditBatch()" style="margin: 5px 10px 5px 5px;">
+      Lô hàng mới - NSX: {{batchInfo?.batch.manufacturingDate | date:'dd/MM/yyyy'}}
+      - HSD: {{batchInfo?.batch.expiryDate | date:'dd/MM/yyyy'}}
+      - {{'SL: ' + batchInfo.quantity}} {{unit.unitName}} - Tổng: {{batchInfo.totalPrice |
+      currency:'VND'}}</span>
+  </ng-template>
+</div>
+<ng-template #NoBatchProduct>
+  <span role="button" (click)="openModalEditBatch()" style="margin: 5px 10px 5px 5px;"> {{'SL: ' + batchInfo.quantity}}
+    {{unit.unitName}} - Tổng:
+    {{batchInfo.totalPrice | currency:'VND'}}
+  </span>
+</ng-template>
+
+
+
+
+<nz-modal [(nzVisible)]="isVisibleEdit" nzTitle="Chỉnh sửa thông tin lô hàng" (nzOnCancel)="handleCanceleditBatch()"
+  (nzOnOk)="handleOkEditBatch()" nzOkText="Thay đổi">
+  <ng-container *nzModalContent>
+    <div *ngIf="batchInfo.batchId != null; else editNewBatch">
+      <div class="form-group mb-3">
+        <h5>Sản phẩm: {{productName.name}}</h5>
+      </div>
+      <div class="row">
+        <nz-form-item *ngIf="productName?.isManagedInBatches == true">
+          <nz-form-label [nzSm]="6" [nzXs]="24">Lô hàng</nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            {{batchInfo.batchId}} - {{fullInfomationOfBatch.batchBarcode}} - HSD:{{fullInfomationOfBatch.expiryDate |
+            date:'dd/MM/yyyy'}}
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Số lượng</nz-form-label>
+          <nz-form-control [nzSm]="5" [nzXs]="24">
+            <nz-input-number [(ngModel)]="quantityBatch" [nzMin]="1" [nzMax]="100000000000" [nzStep]="1"
+              class="w-100"></nz-input-number>
+          </nz-form-control>
+
+          <nz-form-label [nzSm]="5" [nzXs]="24">Đơn vị</nz-form-label>
+          <nz-form-control [nzSm]="7" [nzXs]="24">
+            <nz-select nzShowSearch [(ngModel)]="unit.id">
+              <nz-option *ngFor="let unit1 of listUnitProductPrice" [nzLabel]="unit1.unit" [nzValue]="unit1.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Tổng giá nhập</nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <nz-input-number [(ngModel)]="totalPrice" [nzMin]="1000" [nzStep]="1000" [nzMax]="100000000000"
+              class="w-100">
+            </nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <ng-template #editNewBatch>
+      <div class="form-group mb-3">
+        <h5>Sản phẩm: {{productName.name}}</h5>
+      </div>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">Ngày sản xuất</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          {{batchInfo.batch.manufacturingDate | date:'dd/MM/yyyy'}}
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">Hạn sử dụng</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          {{batchInfo.batch.expiryDate | date:'dd/MM/yyyy'}}
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Số lượng</nz-form-label>
+        <nz-form-control [nzSm]="5" [nzXs]="24">
+          <nz-input-number [(ngModel)]="quantityBatch" [nzMin]="1" [nzStep]="1" [nzMax]="100000000000"
+            class="w-100"></nz-input-number>
+        </nz-form-control>
+
+        <nz-form-label [nzSm]="5" [nzXs]="24">Đơn vị</nz-form-label>
+        <nz-form-control [nzSm]="7" [nzXs]="24">
+          <nz-select nzShowSearch [(ngModel)]="unit.id">
+            <nz-option *ngFor="let unit1 of listUnitProductPrice" [nzLabel]="unit1.unit" [nzValue]="unit1.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Tổng giá nhập</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-input-number [(ngModel)]="totalPrice" [nzMin]="1000" [nzStep]="1000" [nzMax]="100000000000"
+            class="w-100"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+    </ng-template>
+
+  </ng-container>
+</nz-modal>

@@ -1,0 +1,106 @@
+<main id="main" class="main">
+    <div class="pagetitle d-flex justify-content-between">
+        <div>
+            <h1>Danh nhà sản xuất</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="/dashboard">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Nhà sản xuất</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <!-- <button id="create-button" nz-button nzType="primary" nzSize="large">
+                <a routerLink="/dashboard/create-medicine">
+                    <i class="bi bi-plus"></i>
+                    <span>Tạo nhà sản xuất</span>
+                </a>
+            </button> -->
+            <!-- <nz-modal>ok</nz-modal> -->
+            <div>
+                <button class="btn btn-outline-primary action__button" (click)="showModal()" style="border-radius: 10px; width: 170px;"><i class="bi bi-plus"></i>
+                    <span>Tạo nhà sản xuất</span></button>
+                <nz-modal [(nzVisible)]="isVisible" nzTitle="Tạo nhà sản xuất" nzOkText="Tạo nhà sản xuất"
+                    nzCancelText="Hủy" (nzOnOk)="handleOk()" (nzOnCancel)="handleCancel()">
+                    <ng-container *nzModalContent>
+                        <nz-form-label nzRequired for="inputName5" class="form-label">Tên nhà sản xuất</nz-form-label>
+                        <input type="text" class="form-control" id="inputName" [(ngModel)]="factoryName">
+                        <div *ngIf="checkError == true">
+                            <small style="color: red;">Vui lòng nhập tên nhà sản xuất</small>
+                        </div>
+                        <div *ngIf="checkError_2 == true">
+                          <small style="color: red;">Tên nhà sản xuất từ 6 - 150 kí tự</small>
+                      </div>
+                    </ng-container>
+                </nz-modal>
+            </div>
+        </div>
+    </div>
+    <div id="search">
+        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="">          <!-- [nzAddOnAfter]="suffixButton" -->
+            <input type="text" nz-input placeholder="Nhập tên nhà sản xuất ..." [(ngModel)]="searchValue"
+                (ngModelChange)="getListSearch()" />
+        </nz-input-group>
+        <!-- <ng-template #suffixButton>
+            <button nz-button nzType="primary" nzSize="large" nzSearch>
+                <nz-select [(ngModel)]="selectedProvince" nzSize="large" (ngModelChange)="SearchOption($event)">
+                    <nz-option nzValue="searchID" nzLabel="Mã nhà sản xuất"></nz-option>
+                    <nz-option nzValue="SearchName" nzLabel="Tên nhà sản xuất"></nz-option>
+                </nz-select>
+            </button>
+        </ng-template> -->
+    </div>
+    <section class="section">
+        <nz-table [nzLoading]="loading" [nzData]="listsearch" #basicTable [nzPageSize]="5"
+            [nzPageSizeOptions]="[5,10,15,20,25,30]" nzShowSizeChanger>
+            <thead>
+                <tr>
+                    <!-- <th style="text-align: center;">Mã</th> -->
+                    <th >Tên nhà sản xuất</th>
+                    <th style="text-align: center;">Ngày tạo</th>
+                    <th
+                    [nzFilters]="nameList"
+                    [nzFilterMultiple]="true"
+                    [nzFilterFn]="nameFilterFn" style="text-align: center;"
+                    >Tình trạng</th>
+                    <th style="text-align: center;">Điều chỉnh trạng thái</th>
+                    <th style="text-align: center;">Xem chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="cursor: pointer;" *ngFor="let data of basicTable.data" >
+                    <!-- <td>{{ data.id}}</td> -->
+                    <td >{{ data.name }}</td>
+                    <td style="text-align: center;" >{{ data.createdAt | date:'dd-MM-yyyy' }}</td>
+                    <td style="text-align: center;">
+                        <div *ngIf="data.isActive == true; else isActive">
+                            <nz-tag [nzColor]="'green'" >Còn hoạt động</nz-tag>
+                        </div>
+                        <ng-template #isActive>
+                            <div>
+                                <nz-tag [nzColor]="'red'" >Ngừng hoạt động</nz-tag>
+                            </div>
+                        </ng-template>
+                    </td>
+                    <td style="text-align: center;">
+                      <!-- <a><button type="button" class="btn btn-outline-secondary">Cập nhật</button></a> -->
+                      <!-- <nz-divider nzType="vertical"></nz-divider> -->
+                      <span *ngIf="data.isActive == false; else ElseBan ">
+                          <button type="button" class="btn btn-outline-success action__button"
+                              (click)="isUnBrand(data.id)">Bỏ chặn</button>
+                      </span>
+                  </td>
+                  <ng-template #ElseBan>
+                      <button type="button" class="btn btn-outline-danger action__button"
+                          (click)="isBrand(data.id)">Chặn</button>
+                  </ng-template>
+                    <td style="text-align: center;">
+                      <a (click)="DetailBrand(data.id)">
+                        <span nz-icon nzType="zoom-in" nzTheme="outline" style="color: rgb(119, 219, 250);font-size: 20px;"></span>
+                      </a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </section>
+</main>

@@ -1,0 +1,52 @@
+<main id="main" class="main">
+    <div class="pagetitle d-flex justify-content-between">
+        <div>
+            <h1>Danh sách khách hàng</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="/dashboard">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Khách Hàng</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div id="search">
+        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+            <input type="text" nz-input placeholder="Nhập tên, số điện thoại khách hàng" [(ngModel)]="searchData"
+                (ngModelChange)="getListSearch()" />
+        </nz-input-group>
+        <ng-template #suffixButton>
+            <button nz-button nzType="primary" nzSize="large" nzSearch>
+                <nz-select [(ngModel)]="selectedProvince" nzSize="large" (ngModelChange)="SearchOption($event)" style="width: 210px">
+                  <nz-option nzValue="SearchPhone" nzLabel="Số điện thoại khách hàng"></nz-option>
+                    <nz-option nzValue="SearchName" nzLabel="Tên khách hàng"></nz-option>
+                </nz-select>
+            </button>
+        </ng-template>
+    </div>
+    <section class="section">
+        <nz-table #basicTable [nzLoading]="loading" [nzData]="listsearch" [nzPageSize]="5"  [nzPageSizeOptions]="[5,10,15,20,25,30]" nzShowSizeChanger>
+            <thead>
+                <tr>
+                  <th style="text-align: center;">Số điện thoại</th>
+                    <th style="text-align: center;">Họ và tên</th>
+                    <th style="text-align: center;">Ngày tạo tài khoản</th>
+                    <th style="text-align: center;">Xem chi tiết</th>
+                    <!-- <th>Action</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of basicTable.data" style="text-align: center;">
+                  <td >{{ data.phoneNumber }}</td>
+                    <td >{{ data.fullName }}</td>
+                    <td >{{ data.createdAt|date:'dd-MM-yyyy'}}</td>
+                    <td style="text-align: center;">
+                      <a (click)="detail(data.id)">
+                        <span nz-icon nzType="zoom-in" nzTheme="outline" style="color: rgb(119, 219, 250);font-size: 20px;"></span>
+                      </a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </section>
+</main>
